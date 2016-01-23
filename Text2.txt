@@ -1,0 +1,5 @@
+int x = 7;
+float y = 7.3;
+while (z != 14 || zz == 5.3) {
+	x += y;
+}

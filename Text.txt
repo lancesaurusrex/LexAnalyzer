@@ -1,0 +1,6 @@
+#define 
+cout << "dog";
+int i == 17;
+{fork 9.3;}
+Object mr;
+mr.getfire();

@@ -1,0 +1,9 @@
+//This is a comment
+if (clowns == funny)
+{
+	laugh++;
+}
+else
+{
+	cout << "no more clowns.";
+}
