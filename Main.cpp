@@ -47,6 +47,15 @@ int main()
 	CustomTypes.emplace_back(CSymbol("//", preT));
 	Lexic.setKeyword(CSymbol("cout", keyT));
 	Lexic.setKeyword(CSymbol("cin", keyT));
+	Lexic.setKeyword(CSymbol("if", keyT));
+	Lexic.setKeyword(CSymbol("else", keyT));
+	Lexic.setKeyword(CSymbol("for", keyT));
+	Lexic.setKeyword(CSymbol("while", keyT));
+	Lexic.setKeyword(CSymbol("void", keyT));
+	Lexic.setKeyword(CSymbol("int", keyT));
+	Lexic.setKeyword(CSymbol("double", keyT));
+	Lexic.setKeyword(CSymbol("float", keyT));
+
 
 	/*for (int i = 0; i < 1; ++i) 
 	{
@@ -81,7 +90,7 @@ int main()
 		Lexic.String2TokenSequence(line);
 	}
 	Lexic.GetAllToken();
-
+	Lexic.Preprocessing();
 	string blank;
 	std::cin >> blank;
 	return 0;

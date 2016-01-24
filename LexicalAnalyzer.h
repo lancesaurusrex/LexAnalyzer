@@ -20,24 +20,17 @@ class CToken
 {
 	friend class CLexicalAnalyzer;
 	friend std::ostream& operator<<(std::ostream& os, const CToken& dt);
+	
 public:
 	CToken();
 	virtual ~CToken();
 	int getTokenType() const { return TokenType; }
 	string getTokenName() const  { return TokenName; }
+	void setTokenName(string name);
 	
-	//int getTokenInt() { return TokenInt; }
-	//double getTokenReal() { return TokenReal; }
-
 protected:
 	int TokenType;
-
 	string TokenName;
-	//union
-	//{
-	//	int TokenInt;
-	//	double TokenReal;
-	//};
 };
 
 
@@ -53,21 +46,12 @@ public:
 	int TokenType;
 
 	string GetSymbolString() { return SymbolString; }
-
-	//bool operator < (CSymbol &Symbol);
-	//bool operator <= (CSymbol &Symbol);
-
-	//bool operator > (CSymbol &Symbol);
-	//bool operator >= (CSymbol &Symbol);
-
 };
 
 //This class is the lexical analyser
 class CLexicalAnalyzer
 {
 public:
-	//void SetCurrentPosition(POSITION pos);
-	//POSITION GetCurrentPosition();
 	void ClearAllTokens();
 	void GetAllToken();
 	//bool IsAllAlphaOrDigit(string s, int begin, int length);
@@ -76,12 +60,20 @@ public:
 	void String2TokenSequence(string sequence);
 	void setSymbol(CSymbol Symbol);
 	void setKeyword(CSymbol Symbol);
+	void Preprocessing();
 	CLexicalAnalyzer();
 	virtual ~CLexicalAnalyzer();
-	typedef list<CToken>::const_iterator const_iterator;
-	const_iterator begin() { return TokenSequence.cbegin(); }
-	const_iterator end() { return TokenSequence.cend(); }
-	
+	//TokenSequence iterators
+	typedef list<CToken>::iterator CTiterator;
+	CTiterator begin() { return TokenSequence.begin(); }
+	CTiterator end() { return TokenSequence.end(); }
+	typedef list<CToken>::const_iterator CTconst_iterator;
+	CTconst_iterator cbegin() { return TokenSequence.cbegin(); }
+	CTconst_iterator cend() { return TokenSequence.cend(); }
+	//SymbolTable iterators
+	typedef vector<CSymbol>::const_iterator STconst_iterator;
+	STconst_iterator STbegin() { return SymbolTable.cbegin(); }
+	STconst_iterator STend() { return SymbolTable.cend(); }
 
 protected:
 	vector<CSymbol> SymbolTable;

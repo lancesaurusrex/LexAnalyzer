@@ -1,6 +1,6 @@
-#define 
+#define JEBUS 666
 cout << "dog";
-int i == 17;
+double i == 17;
 {fork 9.3;}
 Object mr;
 mr.getfire();

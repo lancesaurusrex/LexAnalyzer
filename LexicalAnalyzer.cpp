@@ -33,6 +33,10 @@ CToken::~CToken()
 
 }
 
+void CToken::setTokenName(string name)
+{
+	TokenName = name;
+}
 //////////////////////////////////////////////////////////////////////
 // CLexicalAnalyzer Class
 //////////////////////////////////////////////////////////////////////
@@ -53,8 +57,6 @@ CLexicalAnalyzer::~CLexicalAnalyzer()
 
 // CSymbol Class
 
-
-
 CSymbol::CSymbol(string string, int type) : SymbolString(string), TokenType(type)
 {
 
@@ -64,6 +66,8 @@ CSymbol::~CSymbol()
 {
 
 }
+
+
 
 void CLexicalAnalyzer::setSymbol(CSymbol Symbol)
 {
@@ -127,7 +131,7 @@ void CLexicalAnalyzer::String2TokenSequence(string sequence)
 		{
 			token.TokenType = preT;
 
-			while (i < sequence.length() && !isspace(sequence[i]))
+			while (i < sequence.length())
 			{
 				token.TokenName += sequence[i];
 				i++;
@@ -200,7 +204,7 @@ void CLexicalAnalyzer::String2TokenSequence(string sequence)
 		//still, check for keywords
 		if (token.TokenType == nilT) 
 		{
-			int oldi = i;	//for reset if not found;
+			int oldi = i;	//reset i if not found;
 
 			if (i < sequence.length() && isalpha(sequence[i]))
 			{
@@ -264,7 +268,7 @@ void CLexicalAnalyzer::GetAllToken()
 {
 	std::ostream_iterator<CToken> out_it(std::cout);
 
-	std::copy( begin(), end(), out_it);
+	std::copy( cbegin(), cend(), out_it);
 }
 
 std::ostream& operator<<(std::ostream& os, const CToken& obj)
@@ -288,3 +292,28 @@ void CLexicalAnalyzer::ClearAllTokens()
 	while (!TokenSequence.empty())
 		TokenSequence.clear();
 }
+
+void CLexicalAnalyzer::Preprocessing()
+{
+	//Look for PreProcess Types
+	//preprocess 4
+
+	for (auto it = begin(); it != end(); ++it)
+	{
+	
+
+				it->setTokenName("RTAWYYAYgty3y3");
+
+	}
+
+	//std::transform(begin(), end(), begin(),
+	//	[](CToken &n)
+	//{
+	//	if (n.TokenType == 4)
+	//	{
+	//		n.setTokenName("YiPPee!");
+	//	}
+	//});
+
+}
+

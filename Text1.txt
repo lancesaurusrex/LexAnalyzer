@@ -1,5 +1,6 @@
 //This is a comment
-if (clowns == funny)
+//If capitalized is not the same as if
+If (clowns == funny)
 {
 	laugh++;
 }
