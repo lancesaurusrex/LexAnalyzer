@@ -297,16 +297,16 @@ void CLexicalAnalyzer::Preprocessing()
 {
 	//Look for PreProcess Types
 	//preprocess 4
-
+	
 	for (auto it = begin(); it != end(); ++it)
 	{
-	
-
-				it->setTokenName("RTAWYYAYgty3y3");
+		it->setTokenName("FUCK");
 
 	}
 
-	//std::transform(begin(), end(), begin(),
+	//list<CToken> blah;
+	//std::list<CToken>::iterator a;
+	//std::transform(begin(), end(), a(),
 	//	[](CToken &n)
 	//{
 	//	if (n.TokenType == 4)
@@ -316,4 +316,3 @@ void CLexicalAnalyzer::Preprocessing()
 	//});
 
 }
-

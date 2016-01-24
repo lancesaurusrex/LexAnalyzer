@@ -27,6 +27,7 @@ public:
 	int getTokenType() const { return TokenType; }
 	string getTokenName() const  { return TokenName; }
 	void setTokenName(string name);
+	void setTokenType(int type) { TokenType = type; }
 	
 protected:
 	int TokenType;

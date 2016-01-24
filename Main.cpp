@@ -89,8 +89,9 @@ int main()
 	{
 		Lexic.String2TokenSequence(line);
 	}
-	Lexic.GetAllToken();
+	
 	Lexic.Preprocessing();
+	Lexic.GetAllToken();
 	string blank;
 	std::cin >> blank;
 	return 0;
