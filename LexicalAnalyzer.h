@@ -20,19 +20,21 @@ class CToken
 {
 	friend class CLexicalAnalyzer;
 	friend std::ostream& operator<<(std::ostream& os, const CToken& dt);
-	
+
 public:
 	CToken();
 	virtual ~CToken();
 	int getTokenType() const { return TokenType; }
 	string getTokenName() const  { return TokenName; }
 	void setTokenName(string name);
-	
+	bool operator==(const CToken& other) {
+		return (this->TokenType == other.TokenType && this->TokenName == other.TokenName);
+	}
+
 protected:
 	int TokenType;
 	string TokenName;
 };
-
 
 //This class represent one symbol
 class CSymbol
@@ -54,13 +56,15 @@ class CLexicalAnalyzer
 public:
 	void ClearAllTokens();
 	void GetAllToken();
+	void ClearToken(CToken a);
 	//bool IsAllAlphaOrDigit(string s, int begin, int length);
 	bool IsSequenceEmpty();
 	void AddToken(CToken token);
 	void String2TokenSequence(string sequence);
 	void setSymbol(CSymbol Symbol);
 	void setKeyword(CSymbol Symbol);
-	void Preprocessing();
+	void PreprocessingDefine();
+	void PreprocessingComments();
 	CLexicalAnalyzer();
 	virtual ~CLexicalAnalyzer();
 	//TokenSequence iterators

@@ -293,27 +293,52 @@ void CLexicalAnalyzer::ClearAllTokens()
 		TokenSequence.clear();
 }
 
-void CLexicalAnalyzer::Preprocessing()
+void CLexicalAnalyzer::ClearToken(CToken a) {
+	while (!TokenSequence.empty())
+		TokenSequence.remove(a);
+		
+}
+
+void CLexicalAnalyzer::PreprocessingDefine()
 {
 	//Look for PreProcess Types
 	//preprocess 4
 
-	for (auto it = begin(); it != end(); ++it)
+	std::transform(begin(), end(), begin(),
+		[](CToken &n)
 	{
-	
-
-				it->setTokenName("RTAWYYAYgty3y3");
-
-	}
-
-	//std::transform(begin(), end(), begin(),
-	//	[](CToken &n)
-	//{
-	//	if (n.TokenType == 4)
-	//	{
-	//		n.setTokenName("YiPPee!");
-	//	}
-	//});
+		if (n.TokenType == 4 && n.TokenName[0] == '#')
+		{
+			string defn = "#define";
+			std::size_t found = n.TokenName.find(defn);
+			n.TokenName = "GGGGGG";		
+			
+			if (found != 0) {
+				if (found + 1 == ' ') {
+					++found;	//move found to the space
+				}
+			}
+		}
+		return n;
+	});
 
 }
 
+void CLexicalAnalyzer::PreprocessingComments()
+{
+
+	auto new_end = remove_if(begin(), end(), [](CToken &n)
+	{
+		return (n.TokenType == 4 && n.TokenName[0] == '/' && n.TokenName[1] == '/');
+		//if ((n.TokenType == 4) && (!n.TokenName.empty()) && n.TokenName[0] == '/' && n.TokenName[1] == '/') { return n; }
+	});
+
+	//std::for_each(begin(), end(), [this](CToken &n)
+	//{
+	//	if (n.TokenType == 4 && (!n.TokenName.empty()) && n.TokenName[0] == '/' && n.TokenName[1] == '/')
+	//	{
+	//		ClearToken(n);
+	//	}
+	//	return n;
+	//});
+}
