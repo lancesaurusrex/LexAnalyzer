@@ -316,6 +316,7 @@ void CLexicalAnalyzer::PreprocessingDefine()
 			if (found != 0) {
 				if (found + 1 == ' ') {
 					++found;	//move found to the space
+					//findfirstof
 				}
 			}
 		}
