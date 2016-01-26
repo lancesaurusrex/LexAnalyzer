@@ -8,6 +8,7 @@
 #include<iostream>
 #include<map>
 #include<ctype.h>
+#include<sstream>
 
 using std::string;
 using std::list;
@@ -28,7 +29,7 @@ public:
 	string getTokenName() const  { return TokenName; }
 	void setTokenName(string name);
 	bool operator==(const CToken& other) {
-		return (this->TokenType == other.TokenType && this->TokenName == other.TokenName);
+		return (*this == other);
 	}
 
 protected:
@@ -43,6 +44,9 @@ public:
 	CSymbol();
 	CSymbol(string string, int type);
 	virtual ~CSymbol();
+	bool operator== (const string& other) const{
+		return (this->SymbolString.compare(other) == 0);
+	}
 
 	string SymbolString;
 	int TokenType;
@@ -75,9 +79,9 @@ public:
 	CTconst_iterator cbegin() { return TokenSequence.cbegin(); }
 	CTconst_iterator cend() { return TokenSequence.cend(); }
 	//SymbolTable iterators
-	typedef vector<CSymbol>::const_iterator STconst_iterator;
-	STconst_iterator STbegin() { return SymbolTable.cbegin(); }
-	STconst_iterator STend() { return SymbolTable.cend(); }
+	typedef vector<CSymbol>::const_iterator KTconst_iterator;
+	KTconst_iterator KTbegin() { return KeywordTable.cbegin(); }
+	KTconst_iterator KTend() { return KeywordTable.cend(); }
 
 protected:
 	vector<CSymbol> SymbolTable;

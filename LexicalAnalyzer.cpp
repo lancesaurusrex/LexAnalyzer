@@ -131,7 +131,7 @@ void CLexicalAnalyzer::String2TokenSequence(string sequence)
 		{
 			token.TokenType = preT;
 
-			while (i < sequence.length())
+			while (i < sequence.length() && !isspace(sequence[i]))
 			{
 				token.TokenName += sequence[i];
 				i++;
@@ -303,26 +303,85 @@ void CLexicalAnalyzer::PreprocessingDefine()
 {
 	//Look for PreProcess Types
 	//preprocess 4
-
-	std::transform(begin(), end(), begin(),
+	auto it = TokenSequence.begin();
+	it = std::find_if(begin(), end(), 
 		[](CToken &n)
 	{
-		if (n.TokenType == 4 && n.TokenName[0] == '#')
-		{
-			string defn = "#define";
-			std::size_t found = n.TokenName.find(defn);
-			n.TokenName = "GGGGGG";		
+			return (n.TokenType == 4 && n.TokenName == "#define");
+
+
+			//return n;
+			//string defn;
+			//std::stringstream ss(n.TokenName);
+			//list<string> temp;
+			//while (std::getline(ss, defn, ' ')) 
+			//{
+			//	temp.push_back(defn);
+			//}
+
+			//might have to move this into find id in keywordtable func
+			//for (auto it = temp.cbegin(); it != temp.cend(); ++it)
+			//{ 
+			//	if (*it == "#define"){
+			//	
+			//		//++it;	//it is #define go to next word;
+			//		//vector<CSymbol>::const_iterator itfind;	
+			//		//itfind = std::find(KTbegin(), KTend(), *it);
+			//		//if (itfind != KeywordTable.cend())	//found in Keyword Table, update value
+			//		//{
+			//		//	++it;	//go to value
+			//		//}
+			//	}
+			//
+			//}
+
+			//if (std::getline(ss, defn, ' ')) //get first word, it has to be #define
+			//{	
+			//	if (defn == "#define")	//check if #define
+			//	{	
+			//		while (std::getline(ss, defn, ' '))		//get rest of words
+			//		{	
+			//			if (!isdigit(stoi(defn))) //if word is not digit store as id
+			//			{
+			//				//find in keyword table if not found add to TokenSequence
+			//				std::find(cbegin(), cend(), defn);
+			//				
+
+			//			}	
+			//		}
+			//	}
+			//	else {} //errortype 
+			//}
+
 			
-			if (found != 0) {
-				if (found + 1 == ' ') {
-					++found;	//move found to the space
-					//findfirstof
-				}
-			}
-		}
-		return n;
+			//std::size_t found = n.TokenName.find(defn);	//find #define
+			//int i = 0;
+			////n.TokenName = "GGGGGG";		
+			//
+			//if (found != std::string::npos)
+			//while (i != n.TokenName.size()) {
+			//	defn = " ";		//let it find spaces
+			//	
+			//	found = n.TokenName.find_first_of(defn);		//find spaces in words
+			//	int i = found;		//go ahead one of space
+			//	
+			//	int prevspace = i;
+			//	//trimspace of string
+			//	string defn = n.TokenName.substr(prevspace, i);
+			//}
+		
+		
 	});
 
+	it++;	//finds #define go to next in list which is the id
+	auto itfind = std::find(KTbegin(), KTend(), it->TokenName);	//find in keyword table
+	if (itfind == KeywordTable.cend())	//not found in Keyword Table, add to Keyword Table
+	{
+		CSymbol c;
+		c.SymbolString = it->TokenName;
+		c.TokenType = it->TokenType;	//might need to change to keyword
+		KeywordTable.emplace_back(c);
+	}
 }
 
 void CLexicalAnalyzer::PreprocessingComments()
