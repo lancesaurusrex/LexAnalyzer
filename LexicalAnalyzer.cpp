@@ -341,57 +341,6 @@ void CLexicalAnalyzer::PreprocessingDefine()
 {
 	//Look for PreProcess Types
 	//preprocess 4
-	
-			//might have to move this into find id in keywordtable func
-			//for (auto it = temp.cbegin(); it != temp.cend(); ++it)
-			//{ 
-			//	if (*it == "#define"){
-			//	
-			//		//++it;	//it is #define go to next word;
-			//		//vector<CSymbol>::const_iterator itfind;	
-			//		//itfind = std::find(KTbegin(), KTend(), *it);
-			//		//if (itfind != KeywordTable.cend())	//found in Keyword Table, update value
-			//		//{
-			//		//	++it;	//go to value
-			//		//}
-			//	}
-			//
-			//}
-
-			//if (std::getline(ss, defn, ' ')) //get first word, it has to be #define
-			//{	
-			//	if (defn == "#define")	//check if #define
-			//	{	
-			//		while (std::getline(ss, defn, ' '))		//get rest of words
-			//		{	
-			//			if (!isdigit(stoi(defn))) //if word is not digit store as id
-			//			{
-			//				//find in keyword table if not found add to TokenSequence
-			//				std::find(cbegin(), cend(), defn);
-			//				
-
-			//			}	
-			//		}
-			//	}
-			//	else {} //errortype 
-			//}
-
-			
-			//std::size_t found = n.TokenName.find(defn);	//find #define
-			//int i = 0;
-			////n.TokenName = "GGGGGG";		
-			//
-			//if (found != std::string::npos)
-			//while (i != n.TokenName.size()) {
-			//	defn = " ";		//let it find spaces
-			//	
-			//	found = n.TokenName.find_first_of(defn);		//find spaces in words
-			//	int i = found;		//go ahead one of space
-			//	
-			//	int prevspace = i;
-			//	//trimspace of string
-			//	string defn = n.TokenName.substr(prevspace, i);
-			//}
 
 	auto itFindDef = find_if(begin(), end(), [&](CToken &n) {
 
@@ -425,29 +374,20 @@ void CLexicalAnalyzer::PreprocessingDefine()
 					KeywordTable.emplace_back(c);
 			}
 		}
+
+		auto tempit = temp.cbegin();
+		std::advance(tempit, 1);
+		itFindDef->TokenName = *tempit;
+		std::advance(tempit, 1);
+		itFindDef->TokenType = 8;
+		itFindDef->TokenValue = *tempit;
+		itFindDef->TokenValueType = 0;	//not sure what this is tired of doing this
+		//add to valuetable
 	}
 	else
 	{
-		throw std::invalid_argument("not enough or too much in temp list");
+		throw std::invalid_argument("3 parts to #define, #define NAME 0");
 	}
-
-	
-	auto tempit = temp.cbegin();
-	std::advance(tempit, 1);
-	itFindDef->TokenName = *tempit;
-	std::advance(tempit, 1);
-	itFindDef->TokenType = 8;
-	itFindDef->TokenValue = *tempit;
-	itFindDef->TokenValueType = 0;	//not sure what this is tired of doing this
-	//add to valuetable
-	
-
-	//remove name from TokenSequence didn't work full name didnt match partial
-	//remove_if(begin(), end(), [&](CToken &n) {
-	//	auto tempit = temp.cbegin();
-	//	std::advance(tempit, 1);	//go forward one
-	//	return (n.TokenName == *tempit);
-	//});
 }
 
 void CLexicalAnalyzer::PreprocessingComments()
@@ -456,13 +396,4 @@ void CLexicalAnalyzer::PreprocessingComments()
 	{
 		return (n.TokenType == 4 && n.TokenName[0] == '/' && n.TokenName[1] == '/');
 	});
-
-	//std::for_each(begin(), end(), [this](CToken &n)
-	//{
-	//	if (n.TokenType == 4 && (!n.TokenName.empty()) && n.TokenName[0] == '/' && n.TokenName[1] == '/')
-	//	{
-	//		ClearToken(n);
-	//	}
-	//	return n;
-	//});
 }
