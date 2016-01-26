@@ -131,7 +131,7 @@ void CLexicalAnalyzer::String2TokenSequence(string sequence)
 		{
 			token.TokenType = preT;
 
-			while (i < sequence.length() && !isspace(sequence[i]))
+			while (i < sequence.length())
 			{
 				token.TokenName += sequence[i];
 				i++;
@@ -298,27 +298,50 @@ void CLexicalAnalyzer::ClearToken(CToken a) {
 		TokenSequence.remove(a);
 		
 }
+void CLexicalAnalyzer::PreprocessingID() {
+
+	for (auto itT = begin(); itT != end(); ++itT) {
+
+		if (itT->TokenType == 1)
+		{
+			auto idV = find(IDbegin(), IDend(), itT->TokenName);
+			CToken n;
+			n.TokenName = itT->TokenName;
+			n.TokenType = itT->TokenType;
+
+			if (idV != IDValue.cend())	//found
+			{
+				if (itT->TokenType == 3 && itT->TokenName == "=") {
+					++itT;	//go to next
+					if (itT->TokenType == 5 || itT->TokenType == 6 || itT->TokenType == 7) {
+						idV->TokenValue = itT->TokenValue;
+						idV->TokenValueType = itT->TokenValueType;
+					}
+				}
+			}
+			else          //not found
+			{
+				itT++;	//go to next item after identifer
+				if (itT->TokenType == 3 && itT->TokenName == "=") {
+					++itT;	//go to next
+					if (itT->TokenType == 5 || itT->TokenType == 6 || itT->TokenType == 7) {
+						n.TokenValue = itT->TokenName;	//assign Value of identifer to identifer TokenValue (a)
+						n.TokenValueType = itT->TokenType;	//assign ValueType to TokenValueType
+					}
+				}
+
+				IDValue.emplace_back(n);
+				
+			}
+		}
+	}
+}
 
 void CLexicalAnalyzer::PreprocessingDefine()
 {
 	//Look for PreProcess Types
 	//preprocess 4
-	auto it = TokenSequence.begin();
-	it = std::find_if(begin(), end(), 
-		[](CToken &n)
-	{
-			return (n.TokenType == 4 && n.TokenName == "#define");
-
-
-			//return n;
-			//string defn;
-			//std::stringstream ss(n.TokenName);
-			//list<string> temp;
-			//while (std::getline(ss, defn, ' ')) 
-			//{
-			//	temp.push_back(defn);
-			//}
-
+	
 			//might have to move this into find id in keywordtable func
 			//for (auto it = temp.cbegin(); it != temp.cend(); ++it)
 			//{ 
@@ -369,28 +392,69 @@ void CLexicalAnalyzer::PreprocessingDefine()
 			//	//trimspace of string
 			//	string defn = n.TokenName.substr(prevspace, i);
 			//}
-		
-		
+
+	auto itFindDef = find_if(begin(), end(), [&](CToken &n) {
+
+		return (n.TokenType == 4);
 	});
 
-	it++;	//finds #define go to next in list which is the id
-	auto itfind = std::find(KTbegin(), KTend(), it->TokenName);	//find in keyword table
-	if (itfind == KeywordTable.cend())	//not found in Keyword Table, add to Keyword Table
+	string defn;
+	std::stringstream ss(itFindDef->TokenName);
+	list<string> temp;
+	while (std::getline(ss, defn, ' '))
 	{
-		CSymbol c;
-		c.SymbolString = it->TokenName;
-		c.TokenType = it->TokenType;	//might need to change to keyword
-		KeywordTable.emplace_back(c);
+		temp.push_back(defn);
 	}
+	defn = "#define";
+	auto itdef = find(temp.begin(), temp.end(), defn);
+
+	if (temp.size() == 3) {
+		if (itdef != temp.end())
+		{
+			++itdef;	//go to next iteration identifer
+			auto itfind = std::find(KTbegin(), KTend(), *itdef);		//find identifer
+			if (itfind != KeywordTable.end())	//found
+			{
+				//update value
+			}
+			else        //not found
+			{				
+					CSymbol c;
+					c.SymbolString = *itdef;		//copy tokenname
+					c.TokenType = 8;	//might need to change to keyword
+					KeywordTable.emplace_back(c);
+			}
+		}
+	}
+	else
+	{
+		throw std::invalid_argument("not enough or too much in temp list");
+	}
+
+	
+	auto tempit = temp.cbegin();
+	std::advance(tempit, 1);
+	itFindDef->TokenName = *tempit;
+	std::advance(tempit, 1);
+	itFindDef->TokenType = 8;
+	itFindDef->TokenValue = *tempit;
+	itFindDef->TokenValueType = 0;	//not sure what this is tired of doing this
+	//add to valuetable
+	
+
+	//remove name from TokenSequence didn't work full name didnt match partial
+	//remove_if(begin(), end(), [&](CToken &n) {
+	//	auto tempit = temp.cbegin();
+	//	std::advance(tempit, 1);	//go forward one
+	//	return (n.TokenName == *tempit);
+	//});
 }
 
 void CLexicalAnalyzer::PreprocessingComments()
 {
-
 	auto new_end = remove_if(begin(), end(), [](CToken &n)
 	{
 		return (n.TokenType == 4 && n.TokenName[0] == '/' && n.TokenName[1] == '/');
-		//if ((n.TokenType == 4) && (!n.TokenName.empty()) && n.TokenName[0] == '/' && n.TokenName[1] == '/') { return n; }
 	});
 
 	//std::for_each(begin(), end(), [this](CToken &n)

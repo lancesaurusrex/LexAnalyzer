@@ -1,6 +1,7 @@
 //This is a comment
 //If capitalized is not the same as if
-If (clowns == funny)
+int laugh = 0;
+if (clowns == funny)
 {
 	laugh++;
 }

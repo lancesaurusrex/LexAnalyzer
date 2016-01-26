@@ -28,13 +28,17 @@ public:
 	int getTokenType() const { return TokenType; }
 	string getTokenName() const  { return TokenName; }
 	void setTokenName(string name);
-	bool operator==(const CToken& other) {
-		return (*this == other);
+	bool operator==(const CToken& other) { return (*this == other); }
+	bool operator==(const string& other) const {
+		return (this->TokenName.compare(other) == 0);
 	}
+	
 
 protected:
 	int TokenType;
 	string TokenName;
+	string TokenValue;
+	int TokenValueType;
 };
 
 //This class represent one symbol
@@ -69,6 +73,7 @@ public:
 	void setKeyword(CSymbol Symbol);
 	void PreprocessingDefine();
 	void PreprocessingComments();
+	void PreprocessingID();
 	CLexicalAnalyzer();
 	virtual ~CLexicalAnalyzer();
 	//TokenSequence iterators
@@ -82,10 +87,14 @@ public:
 	typedef vector<CSymbol>::const_iterator KTconst_iterator;
 	KTconst_iterator KTbegin() { return KeywordTable.cbegin(); }
 	KTconst_iterator KTend() { return KeywordTable.cend(); }
+	typedef list<CToken>::iterator IDiterator;
+	IDiterator IDbegin() { return IDValue.begin(); }
+	IDiterator IDend() { return IDValue.end(); }
 
 protected:
 	vector<CSymbol> SymbolTable;
 	list<CToken> TokenSequence;
+	list<CToken> IDValue;
 	vector<CSymbol> KeywordTable;
 
 };

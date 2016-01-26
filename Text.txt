@@ -1,6 +1,7 @@
 #define JEBUS 666
-cout << "dog";
+string s = "dog";
+cout << s;
 double i = 17;
-if (i > 9) {fork = 9.3;}
+if (i > 9) {double fork = 9.3;}
 Object mr;
-mr.getfire();
+s = "puppy";

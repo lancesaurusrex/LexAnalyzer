@@ -55,6 +55,7 @@ int main()
 	Lexic.setKeyword(CSymbol("int", keyT));
 	Lexic.setKeyword(CSymbol("double", keyT));
 	Lexic.setKeyword(CSymbol("float", keyT));
+	Lexic.setKeyword(CSymbol("string", keyT));
 
 
 	/*for (int i = 0; i < 1; ++i) 
@@ -90,8 +91,10 @@ int main()
 		Lexic.String2TokenSequence(line);
 	}
 	Lexic.GetAllToken();
+	Lexic.PreprocessingID();
 	Lexic.PreprocessingDefine();
 	Lexic.PreprocessingComments();
+	
 	Lexic.GetAllToken();
 	string blank;
 	std::cin >> blank;
