@@ -294,34 +294,34 @@ void CLexicalAnalyzer::ClearToken(CToken a) {
 }
 void CLexicalAnalyzer::PreprocessingID() {
 
-	for (auto itT = begin(); itT != end(); ++itT) {
+	for (auto itToken = begin(); itToken != end(); ++itToken) {
 
-		if (itT->TokenType == 1)
+		if (itToken->TokenType == 1)
 		{
-			auto idV = find(IDbegin(), IDend(), itT->TokenName);
+			auto idV = find(IDbegin(), IDend(), itToken->TokenName);
 
 			CToken n;
-			n.TokenName = itT->TokenName;
-			n.TokenType = itT->TokenType;
+			n.TokenName = itToken->TokenName;
+			n.TokenType = itToken->TokenType;
 
 				if (idV != IDValue.cend())	//found in IDValueTable
 				{
-					if (itT->TokenType == 3 && itT->TokenName == "=") {
-						++itT;	//go to next
-						if (itT->TokenType == 5 || itT->TokenType == 6 || itT->TokenType == 7) {
-							idV->TokenValue = itT->TokenValue;
-							idV->TokenValueType = itT->TokenValueType;
+					if (itToken->TokenType == 3 && itToken->TokenName == "=") {
+						++itToken;	//go to next
+						if (itToken->TokenType == 5 || itToken->TokenType == 6 || itToken->TokenType == 7) {
+							idV->TokenValue = itToken->TokenValue;
+							idV->TokenValueType = itToken->TokenValueType;
 						}
 					}
 				}
 				else          //not found
 				{
-					itT++;	//go to next item after identifer
-					if (itT->TokenType == 3 && itT->TokenName == "=") {
-						++itT;	//go to next
-						if (itT->TokenType == 5 || itT->TokenType == 6 || itT->TokenType == 7) {
-							n.TokenValue = itT->TokenName;	//assign Value of identifer to identifer TokenValue (a)
-							n.TokenValueType = itT->TokenType;	//assign ValueType to TokenValueType
+					itToken++;	//go to next item after identifer
+					if (itToken->TokenType == 3 && itToken->TokenName == "=") {
+						++itToken;	//go to next
+						if (itToken->TokenType == 5 || itToken->TokenType == 6 || itToken->TokenType == 7) {
+							n.TokenValue = itToken->TokenName;	//assign Value of identifer to identifer TokenValue (a)
+							n.TokenValueType = itToken->TokenType;	//assign ValueType to TokenValueType
 						}
 					}
 
@@ -333,90 +333,75 @@ void CLexicalAnalyzer::PreprocessingID() {
 }
 
 /*
-What should be done, take define value and store it as a keyword, find all other define names in TokenSequence and do whatever needs to be done
-Might not need IDValue list we'll see 
+Take #define store as keyword and remove
+Then find all versions of defineName and replace with defineValue in TokenSequence
+
+***Could run into a problem, when I replace value with define name, it's looking for a type and I'll keep it an id but I have decimal, int, and string
+	Not sure what to do with that.  Sounds like a pain in my ass.  I have a feeling that will come back to bite me in my ass, making another seperate pain.
 */
 void CLexicalAnalyzer::PreprocessingDefine()
 {
 	//Look for PreProcess Types
 	//preprocess 4
-	
-	//Doesn't find multiple define
-			auto itFindDefineTS = find_if(begin(), end(), [&](CToken &n) {
+	list<string> foundDefine;	//holds all #define found in TokenSequence
 
-			return (n.TokenType == 4);
+	auto itFindDefineTS = begin();
+
+	while (itFindDefineTS != end()) {
+		itFindDefineTS = find_if(itFindDefineTS, end(), [&](CToken &n) {
+			
+			return (n.TokenType == 4 && (n.TokenName.find("#define") != std::string::npos));
 		});
-	
-		
-	
-	//Splitting up #define id value into a list
-	string defn;
-	std::stringstream ss(itFindDefineTS->TokenName);
-	list<string> temp;
-	
-	
 
-	while (std::getline(ss, defn, ' '))
-	{
-		temp.push_back(defn);
-	}
-
-	defn = "#define";
-	auto itdef = find(temp.begin(), temp.end(), defn);
-	
-	if (temp.size() == 3) {
-		if (itdef != temp.end())
-		{
-			++itdef;	//go to next iteration identifer
-			auto itfind = std::find(KTbegin(), KTend(), *itdef);		//find identifer
-			if (itfind != KeywordTable.end())	//found
-			{
-				//update value
-			}
-			else        //not found
-			{
-				CSymbol c;
-				c.SymbolString = *itdef;		//copy tokenname
-				c.TokenType = 8;	//might need to change to keyword
-				KeywordTable.emplace_back(c);
-			}
+		if (itFindDefineTS != end()) {
+			foundDefine.emplace_back(itFindDefineTS->TokenName);
+			++itFindDefineTS;
 		}
-		//Redefining #define in TokenSequence
-		auto tempit = temp.cbegin();
-		std::advance(tempit, 1);
-		itFindDefineTS->TokenName = *tempit;
-		std::advance(tempit, 1);
-		itFindDefineTS->TokenType = 8;
-		itFindDefineTS->TokenValue = *tempit;
-		itFindDefineTS->TokenValueType = 0;	//not sure what this is tired of doing this
-		//add to valuetable
-
-		//Find define values aka not #define VALUE 12 but redefining VALUE = 100
-		tempit = temp.cbegin();
-		++tempit;
-		string defineName(*tempit);
-		++tempit;
-		string defineValue(*tempit);
-
-		//Read #define line
-//Insert MAX symbol into the symbol table with a value of 5
-//Remove #define from the token list
-//Read the rest of tokens.If MAX is found, replace it with 5
-		//can do in id and can delete value stuff
-
-		std::for_each(begin(), end(), [&](CToken &n) {
-
-			if (n.TokenName == defineName)
-			{
-				return (n.TokenValue = "2000");
-			}
-
-		});
 	}
-	else
+
+	auto new_end = remove_if(begin(), end(), [](CToken &n)
 	{
-		throw std::invalid_argument("3 parts to #define, #define NAME 0");
-	}
+		return (n.TokenType == 4 && (n.TokenName.find("#define") != std::string::npos));
+	});
+
+	std::for_each(foundDefine.begin(), foundDefine.end(), [&](string &s) {
+
+		string defn(s);
+		string define("#define ");
+
+		std::size_t found = defn.find("#define ");	//find first space, which is after #define
+		//not sure what found will point to, beginnig of #define_ or end, DEBUG
+		if (found != std::string::npos && ((found + 1) < defn.length())) 
+			defn.erase(found, define.length());	//erase #define_ from string left with NAME 0 
+		else
+			throw std::invalid_argument("STRING FORMATTING ERROR, 3 parts to #define, #define NAME 0");
+
+		int pos = defn.find_first_of(' ');		//a space will seperate NAME VALUE
+		string value = defn.substr(pos + 1), name = defn.substr(0, pos);	//split into name and value strings
+
+		//find TokenSequence in KeywordTable
+		auto itFindKT = std::find(KTbegin(), KTend(), name);		
+
+		if (itFindKT != KeywordTable.end())	//found
+		{
+			//update value?
+		}
+		else        //not found
+		{
+			CSymbol c;
+			c.SymbolString = name;		//copy tokenname
+			c.TokenType = 8;	//might need to change to keyword
+			KeywordTable.emplace_back(c);
+		}
+
+		std::for_each(begin(), end(), [name, value](CToken &n) {
+
+			if (n.TokenName == name)
+			{
+				n.TokenName = value;
+			}
+		});
+	});
 }
 
 void CLexicalAnalyzer::PreprocessingComments()

@@ -4,7 +4,7 @@ int laugh = 0;
 if (clowns == funny)
 {
 	laugh++;
-	int y = JEBUS;
+	int yy = JEBUS;
 }
 else
 {

@@ -80,12 +80,12 @@ int main()
 	{
 		Lexic.String2TokenSequence(line);		
 	}
-	//Lexic.GetAllToken();
+
 	for (std::string line; std::getline(infile1, line);)
 	{
 		Lexic.String2TokenSequence(line);
 	}
-	//Lexic.GetAllToken();
+
 	for (std::string line; std::getline(infile2, line);)
 	{
 		Lexic.String2TokenSequence(line);
