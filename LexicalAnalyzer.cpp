@@ -1,12 +1,6 @@
 #include "LexicalAnalyzer.h"
 
 
-
-//#ifdef _DEBUG
-//#undef THIS_FILE
-//static char THIS_FILE[] = __FILE__;
-//#define new DEBUG_NEW
-//#endif
 char *EnumTypes[] =
 {
 	"nil",
@@ -273,7 +267,7 @@ void CLexicalAnalyzer::GetAllToken()
 
 std::ostream& operator<<(std::ostream& os, const CToken& obj)
 {
-	os << " " << obj.getTokenName() << " " << EnumTypes[obj.getTokenType()] << '\n';
+	os << " " << obj.getTokenName() << " " << EnumTypes[obj.getTokenType()] << " " << obj.TokenValue <<'\n';
 	return os;
 }
 
@@ -305,58 +299,71 @@ void CLexicalAnalyzer::PreprocessingID() {
 		if (itT->TokenType == 1)
 		{
 			auto idV = find(IDbegin(), IDend(), itT->TokenName);
+
 			CToken n;
 			n.TokenName = itT->TokenName;
 			n.TokenType = itT->TokenType;
 
-			if (idV != IDValue.cend())	//found
-			{
-				if (itT->TokenType == 3 && itT->TokenName == "=") {
-					++itT;	//go to next
-					if (itT->TokenType == 5 || itT->TokenType == 6 || itT->TokenType == 7) {
-						idV->TokenValue = itT->TokenValue;
-						idV->TokenValueType = itT->TokenValueType;
+				if (idV != IDValue.cend())	//found in IDValueTable
+				{
+					if (itT->TokenType == 3 && itT->TokenName == "=") {
+						++itT;	//go to next
+						if (itT->TokenType == 5 || itT->TokenType == 6 || itT->TokenType == 7) {
+							idV->TokenValue = itT->TokenValue;
+							idV->TokenValueType = itT->TokenValueType;
+						}
 					}
 				}
-			}
-			else          //not found
-			{
-				itT++;	//go to next item after identifer
-				if (itT->TokenType == 3 && itT->TokenName == "=") {
-					++itT;	//go to next
-					if (itT->TokenType == 5 || itT->TokenType == 6 || itT->TokenType == 7) {
-						n.TokenValue = itT->TokenName;	//assign Value of identifer to identifer TokenValue (a)
-						n.TokenValueType = itT->TokenType;	//assign ValueType to TokenValueType
+				else          //not found
+				{
+					itT++;	//go to next item after identifer
+					if (itT->TokenType == 3 && itT->TokenName == "=") {
+						++itT;	//go to next
+						if (itT->TokenType == 5 || itT->TokenType == 6 || itT->TokenType == 7) {
+							n.TokenValue = itT->TokenName;	//assign Value of identifer to identifer TokenValue (a)
+							n.TokenValueType = itT->TokenType;	//assign ValueType to TokenValueType
+						}
 					}
-				}
 
-				IDValue.emplace_back(n);
-				
-			}
+					IDValue.emplace_back(n);
+				}
+			
 		}
 	}
 }
 
+/*
+What should be done, take define value and store it as a keyword, find all other define names in TokenSequence and do whatever needs to be done
+Might not need IDValue list we'll see 
+*/
 void CLexicalAnalyzer::PreprocessingDefine()
 {
 	//Look for PreProcess Types
 	//preprocess 4
+	
+	//Doesn't find multiple define
+			auto itFindDefineTS = find_if(begin(), end(), [&](CToken &n) {
 
-	auto itFindDef = find_if(begin(), end(), [&](CToken &n) {
-
-		return (n.TokenType == 4);
-	});
-
+			return (n.TokenType == 4);
+		});
+	
+		
+	
+	//Splitting up #define id value into a list
 	string defn;
-	std::stringstream ss(itFindDef->TokenName);
+	std::stringstream ss(itFindDefineTS->TokenName);
 	list<string> temp;
+	
+	
+
 	while (std::getline(ss, defn, ' '))
 	{
 		temp.push_back(defn);
 	}
+
 	defn = "#define";
 	auto itdef = find(temp.begin(), temp.end(), defn);
-
+	
 	if (temp.size() == 3) {
 		if (itdef != temp.end())
 		{
@@ -374,15 +381,31 @@ void CLexicalAnalyzer::PreprocessingDefine()
 					KeywordTable.emplace_back(c);
 			}
 		}
-
+		//Redefining #define in TokenSequence
 		auto tempit = temp.cbegin();
 		std::advance(tempit, 1);
-		itFindDef->TokenName = *tempit;
+		itFindDefineTS->TokenName = *tempit;
 		std::advance(tempit, 1);
-		itFindDef->TokenType = 8;
-		itFindDef->TokenValue = *tempit;
-		itFindDef->TokenValueType = 0;	//not sure what this is tired of doing this
+		itFindDefineTS->TokenType = 8;
+		itFindDefineTS->TokenValue = *tempit;
+		itFindDefineTS->TokenValueType = 0;	//not sure what this is tired of doing this
 		//add to valuetable
+
+		//Find define values aka not #define VALUE 12 but redefining VALUE = 100
+		tempit = temp.cbegin();
+		++tempit;
+		string defineName(*tempit);
+		++tempit;
+		string defineValue(*tempit); 
+
+		//This isn't fucking working and I can't figure out why
+		list<CToken>::iterator itFindREdefineTS;
+		itFindREdefineTS = begin();
+		while (itFindREdefineTS != end()){
+			itFindREdefineTS = find(itFindREdefineTS, end(), defineName);
+			//inf loop
+			itFindREdefineTS->TokenValue = defineValue;
+		}
 	}
 	else
 	{

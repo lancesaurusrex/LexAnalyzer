@@ -91,10 +91,12 @@ int main()
 		Lexic.String2TokenSequence(line);
 	}
 	Lexic.GetAllToken();
-	Lexic.PreprocessingID();
 	Lexic.PreprocessingDefine();
+	Lexic.PreprocessingID();
 	Lexic.PreprocessingComments();
-	
+	std::cout << "SPACE       00" << '\n';
+	std::cout << "SPACE       00" << '\n';
+	std::cout << "SPACE       00" << '\n' << '\n' << '\n';
 	Lexic.GetAllToken();
 	string blank;
 	std::cin >> blank;

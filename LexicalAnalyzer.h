@@ -65,7 +65,6 @@ public:
 	void ClearAllTokens();
 	void GetAllToken();
 	void ClearToken(CToken a);
-	//bool IsAllAlphaOrDigit(string s, int begin, int length);
 	bool IsSequenceEmpty();
 	void AddToken(CToken token);
 	void String2TokenSequence(string sequence);
