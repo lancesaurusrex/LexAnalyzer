@@ -369,7 +369,7 @@ void CLexicalAnalyzer::PreprocessingDefine()
 		string define("#define ");
 
 		std::size_t found = defn.find("#define ");	//find first space, which is after #define
-		//not sure what found will point to, beginnig of #define_ or end, DEBUG
+
 		if (found != std::string::npos && ((found + 1) < defn.length())) 
 			defn.erase(found, define.length());	//erase #define_ from string left with NAME 0 
 		else
