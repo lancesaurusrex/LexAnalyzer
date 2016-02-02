@@ -374,11 +374,11 @@ void CLexicalAnalyzer::PreprocessingDefine()
 				//update value
 			}
 			else        //not found
-			{				
-					CSymbol c;
-					c.SymbolString = *itdef;		//copy tokenname
-					c.TokenType = 8;	//might need to change to keyword
-					KeywordTable.emplace_back(c);
+			{
+				CSymbol c;
+				c.SymbolString = *itdef;		//copy tokenname
+				c.TokenType = 8;	//might need to change to keyword
+				KeywordTable.emplace_back(c);
 			}
 		}
 		//Redefining #define in TokenSequence
@@ -396,16 +396,22 @@ void CLexicalAnalyzer::PreprocessingDefine()
 		++tempit;
 		string defineName(*tempit);
 		++tempit;
-		string defineValue(*tempit); 
+		string defineValue(*tempit);
 
-		//This isn't fucking working and I can't figure out why
-		list<CToken>::iterator itFindREdefineTS;
-		itFindREdefineTS = begin();
-		while (itFindREdefineTS != end()){
-			itFindREdefineTS = find(itFindREdefineTS, end(), defineName);
-			//inf loop
-			itFindREdefineTS->TokenValue = defineValue;
-		}
+		//Read #define line
+//Insert MAX symbol into the symbol table with a value of 5
+//Remove #define from the token list
+//Read the rest of tokens.If MAX is found, replace it with 5
+		//can do in id and can delete value stuff
+
+		std::for_each(begin(), end(), [&](CToken &n) {
+
+			if (n.TokenName == defineName)
+			{
+				return (n.TokenValue = "2000");
+			}
+
+		});
 	}
 	else
 	{
