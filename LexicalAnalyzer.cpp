@@ -304,30 +304,29 @@ void CLexicalAnalyzer::PreprocessingID() {
 			n.TokenName = itToken->TokenName;
 			n.TokenType = itToken->TokenType;
 
-				if (idV != IDValue.cend())	//found in IDValueTable
-				{
-					if (itToken->TokenType == 3 && itToken->TokenName == "=") {
-						++itToken;	//go to next
-						if (itToken->TokenType == 5 || itToken->TokenType == 6 || itToken->TokenType == 7) {
-							idV->TokenValue = itToken->TokenValue;
-							idV->TokenValueType = itToken->TokenValueType;
-						}
+			if (idV != IDValue.cend())	//found in IDValueTable
+			{
+				if (itToken->TokenType == 3 && itToken->TokenName == "=") {
+					++itToken;	//go to next
+					if (itToken->TokenType == 5 || itToken->TokenType == 6 || itToken->TokenType == 7) {
+						idV->TokenValue = itToken->TokenValue;
+						idV->TokenValueType = itToken->TokenValueType;
 					}
 				}
-				else          //not found
-				{
-					itToken++;	//go to next item after identifer
-					if (itToken->TokenType == 3 && itToken->TokenName == "=") {
-						++itToken;	//go to next
-						if (itToken->TokenType == 5 || itToken->TokenType == 6 || itToken->TokenType == 7) {
-							n.TokenValue = itToken->TokenName;	//assign Value of identifer to identifer TokenValue (a)
-							n.TokenValueType = itToken->TokenType;	//assign ValueType to TokenValueType
-						}
+			}
+			else          //not found
+			{
+				itToken++;	//go to next item after identifer
+				if (itToken->TokenType == 3 && itToken->TokenName == "=") {
+					++itToken;	//go to next
+					if (itToken->TokenType == 5 || itToken->TokenType == 6 || itToken->TokenType == 7) {
+						n.TokenValue = itToken->TokenName;	//assign Value of identifer to identifer TokenValue (a)
+						n.TokenValueType = itToken->TokenType;	//assign ValueType to TokenValueType
 					}
+				}
 
-					IDValue.emplace_back(n);
-				}
-			
+				IDValue.emplace_back(n);
+			}
 		}
 	}
 }
@@ -348,7 +347,7 @@ void CLexicalAnalyzer::PreprocessingDefine()
 	auto itFindDefineTS = begin();
 
 	while (itFindDefineTS != end()) {
-		itFindDefineTS = find_if(itFindDefineTS, end(), [&](CToken &n) {
+		itFindDefineTS = find_if(itFindDefineTS, end(), [](CToken &n) {
 			
 			return (n.TokenType == 4 && (n.TokenName.find("#define") != std::string::npos));
 		});
@@ -359,7 +358,7 @@ void CLexicalAnalyzer::PreprocessingDefine()
 		}
 	}
 
-	auto new_end = remove_if(begin(), end(), [](CToken &n)
+	remove_if(begin(), end(), [](CToken &n)
 	{
 		return (n.TokenType == 4 && (n.TokenName.find("#define") != std::string::npos));
 	});
@@ -390,7 +389,7 @@ void CLexicalAnalyzer::PreprocessingDefine()
 		{
 			CSymbol c;
 			c.SymbolString = name;		//copy tokenname
-			c.TokenType = 8;	//might need to change to keyword
+			c.TokenType = 8;	
 			KeywordTable.emplace_back(c);
 		}
 
