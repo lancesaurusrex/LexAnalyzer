@@ -3,5 +3,5 @@ string s = "dog";
 cout << s;
 double i = 17;
 if (i > 9) {double fork = 9.3;}
-Object mr;
+object mr;
 s = "puppy";

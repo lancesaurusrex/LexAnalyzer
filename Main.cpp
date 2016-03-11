@@ -56,6 +56,7 @@ int main()
 	Lexic.setKeyword(CSymbol("double", keyT));
 	Lexic.setKeyword(CSymbol("float", keyT));
 	Lexic.setKeyword(CSymbol("string", keyT));
+	Lexic.setKeyword(CSymbol("object", keyT));
 
 
 	/*for (int i = 0; i < 1; ++i) 
@@ -94,9 +95,8 @@ int main()
 	Lexic.PreprocessingDefine();
 	Lexic.PreprocessingID();
 	Lexic.PreprocessingComments();
-	std::cout << "SPACE       00" << '\n';
-	std::cout << "SPACE       00" << '\n';
-	std::cout << "SPACE       00" << '\n' << '\n' << '\n';
+	std::cout << '\n' << '\n' << '\n';
+	std::cout << '\n' << '\n' << '\n';
 	Lexic.GetAllToken();
 	string blank;
 	std::cin >> blank;
