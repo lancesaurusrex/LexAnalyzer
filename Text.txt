@@ -1,7 +1,9 @@
-#define JEBUS 666
-string s = "dog";
-cout << s;
-double i = 17;
-if (i > 9) {double fork = 9.3;}
-object mr;
-s = "puppy";
+Create 10
+Penup
+Forward 10
+Pendown
+Right 90
+Repeat 4 [Forward 10 Right 90]
+If (Color == orange) [Setcolor red][Setcolor blue]
+Define drawbox Repeat 4[Forward 10 Right 90] End
+Call drawbox

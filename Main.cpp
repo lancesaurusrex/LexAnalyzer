@@ -8,64 +8,35 @@ int main()
 	CLexicalAnalyzer Lexic;
 
 	std::vector<CSymbol> CustomTypes;
-	CSymbol ee("{", 2);
-	//CustomTypes.emplace_back(ee);
-	CustomTypes.emplace_back(CSymbol("=", operatorT));
-	CustomTypes.emplace_back(CSymbol("+", operatorT));
-	CustomTypes.emplace_back(CSymbol("-", operatorT));
-	CustomTypes.emplace_back(CSymbol("*", operatorT));
-	CustomTypes.emplace_back(CSymbol("/", operatorT));
-	CustomTypes.emplace_back(CSymbol("+=", operatorT));
-	CustomTypes.emplace_back(CSymbol("-=", operatorT));
-	CustomTypes.emplace_back(CSymbol("*=", operatorT));
-	CustomTypes.emplace_back(CSymbol("/=", operatorT));
-	CustomTypes.emplace_back(CSymbol("%", operatorT));
-	CustomTypes.emplace_back(CSymbol("++", operatorT));
-	CustomTypes.emplace_back(CSymbol("--", operatorT));
+
 	CustomTypes.emplace_back(CSymbol("==", operatorT));
-	CustomTypes.emplace_back(CSymbol("!=", operatorT));
-	CustomTypes.emplace_back(CSymbol(">", operatorT));
-	CustomTypes.emplace_back(CSymbol("<", operatorT));
-	CustomTypes.emplace_back(CSymbol("<<", operatorT));
-	CustomTypes.emplace_back(CSymbol(">>", operatorT));
-	CustomTypes.emplace_back(CSymbol(">=", operatorT));
-	CustomTypes.emplace_back(CSymbol("<=", operatorT));
-	CustomTypes.emplace_back(CSymbol("&&", operatorT));
-	CustomTypes.emplace_back(CSymbol("||", operatorT));
-	CustomTypes.emplace_back(CSymbol("!", operatorT));
-	CustomTypes.emplace_back(CSymbol("&", operatorT));
-	CustomTypes.emplace_back(CSymbol("|", operatorT));
-	CustomTypes.emplace_back(CSymbol("^", operatorT));
-	CustomTypes.emplace_back(CSymbol(".", operatorT));
+	CustomTypes.emplace_back(CSymbol("[", symbolT));
+	CustomTypes.emplace_back(CSymbol("]", symbolT));
 	CustomTypes.emplace_back(CSymbol("(", symbolT));
 	CustomTypes.emplace_back(CSymbol(")", symbolT));
-	CustomTypes.emplace_back(CSymbol("{", symbolT));
-	CustomTypes.emplace_back(CSymbol("}", symbolT));
-	CustomTypes.emplace_back(CSymbol(",", symbolT));
-	CustomTypes.emplace_back(CSymbol(";", symbolT));
-	CustomTypes.emplace_back(CSymbol("#", preT));
-	CustomTypes.emplace_back(CSymbol("//", preT));
-	Lexic.setKeyword(CSymbol("cout", keyT));
-	Lexic.setKeyword(CSymbol("cin", keyT));
-	Lexic.setKeyword(CSymbol("if", keyT));
-	Lexic.setKeyword(CSymbol("else", keyT));
-	Lexic.setKeyword(CSymbol("for", keyT));
-	Lexic.setKeyword(CSymbol("while", keyT));
-	Lexic.setKeyword(CSymbol("void", keyT));
-	Lexic.setKeyword(CSymbol("int", keyT));
-	Lexic.setKeyword(CSymbol("double", keyT));
-	Lexic.setKeyword(CSymbol("float", keyT));
-	Lexic.setKeyword(CSymbol("string", keyT));
-	Lexic.setKeyword(CSymbol("object", keyT));
 
-
-	/*for (int i = 0; i < 1; ++i) 
-	{
-		string a = "+";
-		int b = operatorT;
-		CSymbol fork(a, b);
-		CustomTypes.emplace_back(fork);
-	}*/
+	Lexic.setKeyword(CSymbol("Penup", keyT));
+	Lexic.setKeyword(CSymbol("Pendown", keyT));
+	Lexic.setKeyword(CSymbol("Forward", keyT));
+	Lexic.setKeyword(CSymbol("Back", keyT));
+	Lexic.setKeyword(CSymbol("Right", keyT));
+	Lexic.setKeyword(CSymbol("Left", keyT));
+	Lexic.setKeyword(CSymbol("Create", keyT));
+	Lexic.setKeyword(CSymbol("If", keyT));
+	Lexic.setKeyword(CSymbol("Color", keyT));
+	Lexic.setKeyword(CSymbol("Setcolor", keyT));
+	Lexic.setKeyword(CSymbol("Repeat", keyT));
+	Lexic.setKeyword(CSymbol("Define", keyT));
+	Lexic.setKeyword(CSymbol("Call", keyT));
+	Lexic.setKeyword(CSymbol("End", keyT));
+	Lexic.setColor(CSymbol("red", colorT));
+	Lexic.setColor(CSymbol("orange", colorT));
+	Lexic.setColor(CSymbol("yellow", colorT));
+	Lexic.setColor(CSymbol("green", colorT));
+	Lexic.setColor(CSymbol("blue", colorT));
+	Lexic.setColor(CSymbol("purple", colorT));
+	Lexic.setColor(CSymbol("white", colorT));
+	Lexic.setColor(CSymbol("black", colorT));
 
 	for each(CSymbol cs in CustomTypes) 
 	{
@@ -82,22 +53,13 @@ int main()
 		Lexic.String2TokenSequence(line);		
 	}
 
-	for (std::string line; std::getline(infile1, line);)
-	{
-		Lexic.String2TokenSequence(line);
-	}
+	Lexic.GetAllToken();
+	//Lexic.PreprocessingDefine();
+	//Lexic.PreprocessingID();
+	//Lexic.PreprocessingComments();
+	std::cout << '\n' << '\n' << '\n';
+	std::cout << '\n' << '\n' << '\n';
 
-	for (std::string line; std::getline(infile2, line);)
-	{
-		Lexic.String2TokenSequence(line);
-	}
-	Lexic.GetAllToken();
-	Lexic.PreprocessingDefine();
-	Lexic.PreprocessingID();
-	Lexic.PreprocessingComments();
-	std::cout << '\n' << '\n' << '\n';
-	std::cout << '\n' << '\n' << '\n';
-	Lexic.GetAllToken();
 	string blank;
 	std::cin >> blank;
 	return 0;
