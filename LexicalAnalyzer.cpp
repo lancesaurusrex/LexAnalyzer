@@ -41,7 +41,33 @@ void CToken::setTokenName(string name)
 
 CLexicalAnalyzer::CLexicalAnalyzer()
 {
-
+	setSymbol(CSymbol("==", operatorT));
+	setSymbol(CSymbol("[", symbolT));
+	setSymbol(CSymbol("]", symbolT));
+	setSymbol(CSymbol("(", symbolT));
+	setSymbol(CSymbol(")", symbolT));
+	setKeyword(CSymbol("Penup", keyT));
+	setKeyword(CSymbol("Pendown", keyT));
+	setKeyword(CSymbol("Forward", keyT));
+	setKeyword(CSymbol("Back", keyT));
+	setKeyword(CSymbol("Right", keyT));
+	setKeyword(CSymbol("Left", keyT));
+	setKeyword(CSymbol("Create", keyT));
+	setKeyword(CSymbol("If", keyT));
+	setKeyword(CSymbol("Color", keyT));
+	setKeyword(CSymbol("Setcolor", keyT));
+	setKeyword(CSymbol("Repeat", keyT));
+	setKeyword(CSymbol("Define", keyT));
+	setKeyword(CSymbol("Call", keyT));
+	setKeyword(CSymbol("End", keyT));
+	setColor(CSymbol("red", colorT));
+	setColor(CSymbol("orange", colorT));
+	setColor(CSymbol("yellow", colorT));
+	setColor(CSymbol("green", colorT));
+	setColor(CSymbol("blue", colorT));
+	setColor(CSymbol("purple", colorT));
+	setColor(CSymbol("white", colorT));
+	setColor(CSymbol("black", colorT));
 }
 
 CLexicalAnalyzer::~CLexicalAnalyzer()
