@@ -1,5 +1,6 @@
+#define JEBUS 666
 //This is a comment
-//If capitalized is not the same as if
+//If capitalized is not the same as 
 int laugh = 0;
 if (clowns == funny)
 {
