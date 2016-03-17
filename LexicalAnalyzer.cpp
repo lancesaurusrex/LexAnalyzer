@@ -132,12 +132,15 @@ void CLexicalAnalyzer::String2TokenSequence(string sequence)
 			}
 			AddToken(token);		
 		}
-		//else if the character is a newline...
-		else if (sequence[i] == '\r' && sequence[i + 1] == '\n')	//bug?  is newline and /r the equiv of one or two characters?
+		//else if the character is a newline... nor for strings
+		else if (sequence[i] == '\\')	
 		{
-			token.TokenType = endlineT;
-			i++;
-			AddToken(token);
+			if (i + 1 < sequence.length() && sequence[i + 1] == 'n') {
+				token.TokenType = endlineT;
+				i++; //for firstslash
+				i++; //for n
+				AddToken(token);
+			}
 		}
 		//else if the character is a digit or a decimal point...
 		else if (isdigit(sequence[i]))	//take out decimal point?
@@ -254,6 +257,14 @@ void CLexicalAnalyzer::String2TokenSequence(string sequence)
 		{
 			token.TokenType = errorT;
 			AddToken(token);
+		}
+
+		if ((i+1) == sequence.length())
+		{
+			token.TokenName = '$';
+			token.TokenType = endlineT;
+			AddToken(token);
+
 		}
 	}
 }

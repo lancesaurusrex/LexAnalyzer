@@ -1,5 +1,5 @@
 int x = 7;
-float y = 7.3;
+int y = 7.3;
 int z = 100;
 double zz = 5.3;
 while (z != 14 || zz == 5.3) {

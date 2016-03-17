@@ -2,6 +2,19 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
+#include <iterator>
+#include <string>
+#include <locale> 
+
+using namespace std;
+
+list<CToken>::const_iterator currentToken;
+bool Program(CLexicalAnalyzer &c);
+bool Definition();
+bool DataDef();
+bool FuncDef();
+bool Type();
 
 int main() 
 {
@@ -54,9 +67,7 @@ int main()
 	Lexic.setKeyword(CSymbol("void", keyT));
 	Lexic.setKeyword(CSymbol("int", keyT));
 	Lexic.setKeyword(CSymbol("double", keyT));
-	Lexic.setKeyword(CSymbol("float", keyT));
 	Lexic.setKeyword(CSymbol("string", keyT));
-	Lexic.setKeyword(CSymbol("object", keyT));
 
 
 	/*for (int i = 0; i < 1; ++i) 
@@ -79,8 +90,11 @@ int main()
 	std::string line;
 	for (std::string line; std::getline(infile, line); )
 	{
-		Lexic.String2TokenSequence(line);		
+		Lexic.String2TokenSequence(line);	
+		//prsea here
 	}
+	currentToken = Lexic.cbegin();
+	if (Program(Lexic)){}
 
 	for (std::string line; std::getline(infile1, line);)
 	{
@@ -97,8 +111,112 @@ int main()
 	Lexic.PreprocessingComments();
 	std::cout << '\n' << '\n' << '\n';
 	std::cout << '\n' << '\n' << '\n';
+	
+	std::cout << '\n' << '\n' << '\n';
+	std::cout << '\n' << '\n' << '\n'; 
 	Lexic.GetAllToken();
 	string blank;
 	std::cin >> blank;
 	return 0;
+}
+
+bool Program(CLexicalAnalyzer &c)
+{
+	
+	list<CToken>::const_iterator temp;
+	temp = currentToken;
+
+
+	if (currentToken == c.cend())
+		return false;
+
+	if (Definition())
+	{
+		cout << "Definition =>Statement Statlist" << endl;
+		if (Definition()){
+			
+			return true;
+		}
+	}
+	else
+		return false;
+}
+
+bool Definition()
+{
+	list<CToken>::const_iterator temp;
+	temp = currentToken;
+
+	//If true goes into brackets
+	if (DataDef())
+	{
+		Definition();
+	}
+
+	if (FuncDef())
+	{
+
+	}
+	return true;
+}
+
+//enum { nilT, idT, symbolT, operatorT, preT, intT, decimalT, stringT, keyT, errorT, endlineT};
+bool DataDef() {
+	list<CToken>::const_iterator temp;
+	temp = currentToken;
+
+	if (Type())
+		return true;
+	else
+		return false;
+}
+
+bool FuncDef() {
+	list<CToken>::const_iterator temp;
+	temp = currentToken;
+
+	return true;//compiler bitch
+}
+
+bool Type() {
+	list<CToken>::const_iterator temp;
+	temp = currentToken;
+	//keyword int decimal string
+	if (currentToken->getTokenType() == 8) {
+		if (currentToken->getTokenName() == "int" || currentToken->getTokenName() == "double" || currentToken->getTokenName() == "string") {
+			currentToken++;
+			if (Expression())
+				return true;
+		}
+	}
+
+	return false;
+}
+
+bool string_is_valid(const std::string &str)
+{
+	return find_if(str.begin(), str.end(),
+		[](char c) { return !(isalnum(c) || (c == ' ')); }) == str.end();
+}
+
+bool Expression() {
+	if (Indentifer()){//id sym exp}
+
+	if (IDNext()) {}
+
+}
+
+bool Indentifer() {
+	list<CToken>::const_iterator temp;
+	temp = currentToken;
+
+	if ((string_is_valid(currentToken->getTokenName))){
+		//is id
+		currentToken++;
+		if (AssignSym()){//is assignsym gobacktoxpr}
+		else if (CompSym()){//is compsym go \backtoxpr}
+		else//idnext
+	}
+	else
+		return false;
 }
