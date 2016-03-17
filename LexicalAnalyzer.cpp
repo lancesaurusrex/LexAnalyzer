@@ -13,7 +13,8 @@ char *EnumTypes[] =
 	"string",
 	"keyword",
 	"error",
-	"endline"
+	"endline",
+	"color"
 };
 
 
@@ -40,7 +41,33 @@ void CToken::setTokenName(string name)
 
 CLexicalAnalyzer::CLexicalAnalyzer()
 {
-
+	setSymbol(CSymbol("==", operatorT));
+	setSymbol(CSymbol("[", symbolT));
+	setSymbol(CSymbol("]", symbolT));
+	setSymbol(CSymbol("(", symbolT));
+	setSymbol(CSymbol(")", symbolT));
+	setKeyword(CSymbol("Penup", keyT));
+	setKeyword(CSymbol("Pendown", keyT));
+	setKeyword(CSymbol("Forward", keyT));
+	setKeyword(CSymbol("Back", keyT));
+	setKeyword(CSymbol("Right", keyT));
+	setKeyword(CSymbol("Left", keyT));
+	setKeyword(CSymbol("Create", keyT));
+	setKeyword(CSymbol("If", keyT));
+	setKeyword(CSymbol("Color", keyT));
+	setKeyword(CSymbol("Setcolor", keyT));
+	setKeyword(CSymbol("Repeat", keyT));
+	setKeyword(CSymbol("Define", keyT));
+	setKeyword(CSymbol("Call", keyT));
+	setKeyword(CSymbol("End", keyT));
+	setColor(CSymbol("red", colorT));
+	setColor(CSymbol("orange", colorT));
+	setColor(CSymbol("yellow", colorT));
+	setColor(CSymbol("green", colorT));
+	setColor(CSymbol("blue", colorT));
+	setColor(CSymbol("purple", colorT));
+	setColor(CSymbol("white", colorT));
+	setColor(CSymbol("black", colorT));
 }
 
 CLexicalAnalyzer::~CLexicalAnalyzer()
@@ -72,7 +99,10 @@ void CLexicalAnalyzer::setKeyword(CSymbol Symbol)
 {
 	KeywordTable.emplace_back(Symbol);
 }
-
+void CLexicalAnalyzer::setColor(CSymbol Symbol)
+{
+	ColorTable.emplace_back(Symbol);
+}
 CSymbol::CSymbol()
 {
 
@@ -198,7 +228,7 @@ void CLexicalAnalyzer::String2TokenSequence(string sequence)
 				AddToken(token);
 			}		
 		}
-		//still, check for keywords
+		//still, check for keywords 
 		if (token.TokenType == nilT) 
 		{
 			int oldi = i;	//reset i if not found;
@@ -219,7 +249,39 @@ void CLexicalAnalyzer::String2TokenSequence(string sequence)
 					CSymbol foundSymbol = *it;
 					token.TokenName = foundSymbol.SymbolString;
 					token.TokenType = foundSymbol.TokenType;
+					
+					AddToken(token);
+				}
+				else
+				{
+					i = oldi;
+				}
 
+			}
+		}
+		//color check
+		if (token.TokenType == nilT)
+		{
+			int oldi = i;	//reset i if not found;
+			if (i < sequence.length() && isalpha(sequence[i]))
+			{
+				string found;
+
+				while (i < sequence.length() && isalpha(sequence[i]))
+				{
+					found += sequence[i];
+					//token.TokenType = foundCSymbol.TokenType;
+					i++;
+				}
+
+
+				auto itColor = std::find_if(ColorTable.cbegin(), ColorTable.cend(), [found](CSymbol b) { return b.GetSymbolString() == found; });
+				if (itColor != ColorTable.cend())
+				{
+					CSymbol foundColor = *itColor;
+					token.TokenName = foundColor.SymbolString;
+					token.TokenType = foundColor.TokenType;
+					--i;	//for ends on length bug in while loop
 					AddToken(token);
 				}
 				else
@@ -228,7 +290,6 @@ void CLexicalAnalyzer::String2TokenSequence(string sequence)
 				}
 			}
 		}
-
 		//still, if the character is still not one of the symbols, check
 		//whether it is an identifier 
 		if (token.TokenType == nilT)

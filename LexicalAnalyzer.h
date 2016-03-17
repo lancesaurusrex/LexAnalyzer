@@ -14,7 +14,7 @@ using std::string;
 using std::list;
 using std::vector;
 
-enum { nilT, idT, symbolT, operatorT, preT, intT, decimalT, stringT, keyT, errorT, endlineT};
+enum { nilT, idT, symbolT, operatorT, preT, intT, decimalT, stringT, keyT, errorT, endlineT, colorT};
 
 //This class is a token
 class CToken
@@ -70,6 +70,7 @@ public:
 	void String2TokenSequence(string sequence);
 	void setSymbol(CSymbol Symbol);
 	void setKeyword(CSymbol Symbol);
+	void setColor(CSymbol Symbol);
 	void PreprocessingDefine();
 	void PreprocessingComments();
 	void PreprocessingID();
@@ -95,7 +96,7 @@ protected:
 	list<CToken> TokenSequence;
 	list<CToken> IDValue;
 	vector<CSymbol> KeywordTable;
-
+	vector<CSymbol> ColorTable;
 };
 
 
